@@ -19,7 +19,7 @@
                 appearance="btn-link"
                 class="delete non-visual-button"
                 type="button"
-                @click="removeElement(index)"
+                @click="removeElement(index, schema.model)"
               >
                 <KIcon
                   slot="icon"
@@ -73,7 +73,7 @@
 import { computed, defineComponent, ref } from '@vue/composition-api'
 import Vue from 'vue'
 import abstractFields from './abstractFields'
-import { cloneDeep } from './schema'
+import { cloneDeep } from '@KHCP/helpers'
 
 export default defineComponent({
   name: 'KfgObjectAdvanced',
@@ -123,8 +123,11 @@ export default defineComponent({
     })
     const hasObjectKeys = computed(() => value.value && Object.keys(value.value).length > 0)
 
-    const removeElement = (index) => {
+    const removeElement = (index, schema) => {
       Vue.delete((value.value as Object), index)
+      const modelValue = cloneDeep(value.value)
+
+      emit('model-updated', modelValue, schema)
     }
 
     const addKey = () => {
